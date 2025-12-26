@@ -77,15 +77,34 @@
       "enabled": true
     },
     {
-      "id": "polygon-massive",
-      "name": "Massive (ex-Polygon.io) Blog",
+      "id": "massive-sdk-js",
+      "name": "Massive (Polygon) JS SDK",
       "category": "server",
-      "type": "html",
-      "url": "https://massive.com/blog",
-      "selector": "h3 a",
+      "type": "github",
+      "url": "polygon-io/client-js",
       "severityHint": "medium",
       "enabled": true,
-      "note": "Polygon.io migrated to Massive.com - Monitor for API migration and service changes"
+      "note": "JavaScript SDK for Massive (ex-Polygon.io) API"
+    },
+    {
+      "id": "massive-sdk-python",
+      "name": "Massive (Polygon) Python SDK",
+      "category": "server",
+      "type": "github",
+      "url": "polygon-io/client-python",
+      "severityHint": "medium",
+      "enabled": true,
+      "note": "Python SDK for Massive (ex-Polygon.io) API"
+    },
+    {
+      "id": "massive-sdk-go",
+      "name": "Massive (Polygon) Go SDK",
+      "category": "server",
+      "type": "github",
+      "url": "polygon-io/client-go",
+      "severityHint": "medium",
+      "enabled": true,
+      "note": "Go SDK for Massive (ex-Polygon.io) API"
     },
     {
       "id": "kabucom-api",
