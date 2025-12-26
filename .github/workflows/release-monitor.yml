@@ -32,7 +32,7 @@ jobs:
           node-version: '18'
 
       - name: Restore cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: monitor/cache
           key: release-monitor-cache-${{ github.sha }}
@@ -49,14 +49,14 @@ jobs:
 
       - name: Save cache
         if: always()
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         with:
           path: monitor/cache
           key: release-monitor-cache-${{ github.sha }}
 
       - name: Upload execution logs
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: monitor-logs-${{ github.run_number }}
           path: |
