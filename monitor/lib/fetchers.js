@@ -195,36 +195,67 @@ async function fetchHTML(source) {
   try {
     const html = await fetchUrl(source.url);
 
-    // Simple extraction: look for headers and links
+    // Simple extraction: look for links
     const items = [];
-    const headingRegex = /<h[1-4][^>]*>(.*?)<\/h[1-4]>/gi;
-    const linkRegex = /<a[^>]*href=["']([^"']+)["'][^>]*>(.*?)<\/a>/gi;
+    const links = [];
 
-    let headings = [];
+    // Extract links based on selector or default pattern
+    let linkRegex;
+    if (source.selector) {
+      // If selector is provided, try to match it
+      // For simple selectors like "h3 a" or "a[href^='/news/']"
+      if (source.selector.includes('a')) {
+        linkRegex = /<a[^>]*href=["']([^"']+)["'][^>]*>(.*?)<\/a>/gi;
+      } else {
+        linkRegex = /<a[^>]*href=["']([^"']+)["'][^>]*>(.*?)<\/a>/gi;
+      }
+    } else {
+      // Default: extract all links
+      linkRegex = /<a[^>]*href=["']([^"']+)["'][^>]*>(.*?)<\/a>/gi;
+    }
+
     let match;
+    while ((match = linkRegex.exec(html)) !== null && links.length < 10) {
+      const href = match[1];
+      const text = match[2].replace(/<[^>]+>/g, '').trim();
 
-    while ((match = headingRegex.exec(html)) !== null) {
-      const text = match[1].replace(/<[^>]+>/g, '').trim();
+      // Convert relative URL to absolute URL
+      let absoluteUrl;
+      try {
+        if (href.startsWith('http')) {
+          absoluteUrl = href;
+        } else if (href.startsWith('/')) {
+          const baseUrl = new URL(source.url);
+          absoluteUrl = `${baseUrl.protocol}//${baseUrl.host}${href}`;
+        } else if (href.startsWith('#') || href.startsWith('javascript:')) {
+          continue; // Skip anchors and javascript links
+        } else {
+          // Relative path
+          absoluteUrl = new URL(href, source.url).href;
+        }
+      } catch (e) {
+        console.error(`[${source.id}] Invalid URL: ${href}`);
+        continue;
+      }
+
       if (text.length > 5 && text.length < 200) {
-        headings.push({
-          text: decodeHTMLEntities(text),
-          position: match.index
+        links.push({
+          url: absoluteUrl,
+          text: decodeHTMLEntities(text)
         });
       }
     }
 
-    // Get first 5 headings as potential updates
-    headings = headings.slice(0, 5);
-
-    headings.forEach((heading, idx) => {
+    // Get first 5 links as potential updates
+    links.slice(0, 5).forEach((link, idx) => {
       items.push({
-        id: hashString(`${source.url}-${heading.text}`),
-        title: heading.text,
-        url: source.url,
+        id: hashString(link.url),
+        title: link.text,
+        url: link.url,
         description: `Update from ${source.name}`,
         publishedAt: Date.now() - (idx * 86400000), // Estimate: newer first
         source: source.id,
-        rawData: heading
+        rawData: link
       });
     });
 

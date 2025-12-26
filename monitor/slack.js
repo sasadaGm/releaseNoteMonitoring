@@ -133,7 +133,7 @@ function formatMessage(newItems, stats) {
         text += `${emoji} *${name}* (${categoryItems.length}件)\n`;
 
         categoryItems.slice(0, 3).forEach(item => {
-          text += `  • ${item.sourceName}: ${item.title.substring(0, 60)}...\n`;
+          text += `  • ${item.sourceName}: ${item.title.substring(0, 50)}... <${item.url}|詳細>\n`;
         });
 
         if (categoryItems.length > 3) {
