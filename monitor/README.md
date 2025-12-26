@@ -70,6 +70,9 @@ DRY_RUN=true node run.js
 # 実際に通知（要SLACK_WEBHOOK_URL）
 SLACK_WEBHOOK_URL="your-webhook-url" node run.js
 
+# 強制通知テスト（全アイテムを新規扱い）
+SLACK_WEBHOOK_URL="your-webhook-url" FORCE_NOTIFY=true node run.js
+
 # キャッシュ統計表示
 node run.js stats
 ```
@@ -87,6 +90,14 @@ GitHub Actionsで毎週月曜 10:00 JST（01:00 UTC）に自動実行されま�
 3. **Run workflow** をクリック
 4. オプション設定：
    - `dry_run`: `true` を選択すると通知せずテスト実行
+   - `force_notify`: `true` を選択すると全アイテムを新規扱いで強制通知（**テスト用**）
+
+#### テスト実行（Slack通知を確認したい場合）
+
+1. **Run workflow** をクリック
+2. `force_notify` を **true** に設定
+3. `dry_run` は **false** のまま
+4. 実行すると、全アイテムが「新規」として扱われSlackに通知される
 
 ## 重要度判定ロジック
 

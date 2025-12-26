@@ -14,6 +14,14 @@ on:
         options:
           - 'false'
           - 'true'
+      force_notify:
+        description: 'Force notify (treat all items as new for testing)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
 
 jobs:
   monitor:
@@ -43,6 +51,7 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+          FORCE_NOTIFY: ${{ github.event.inputs.force_notify || 'false' }}
         run: |
           cd monitor
           node run.js
@@ -71,6 +80,7 @@ jobs:
           echo "- **Status**: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Timestamp**: $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
           echo "- **Dry Run**: ${{ github.event.inputs.dry_run || 'false' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Force Notify**: ${{ github.event.inputs.force_notify || 'false' }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
           if [ -f monitor/cache/state.json ]; then

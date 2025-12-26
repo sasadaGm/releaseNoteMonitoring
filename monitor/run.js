@@ -37,9 +37,14 @@ async function main() {
 
   const webhookUrl = process.env.SLACK_WEBHOOK_URL;
   const dryRun = process.env.DRY_RUN === 'true';
+  const forceNotify = process.env.FORCE_NOTIFY === 'true';
 
   if (!webhookUrl && !dryRun) {
     console.warn('WARNING: SLACK_WEBHOOK_URL not set. Running in dry-run mode.');
+  }
+
+  if (forceNotify) {
+    console.warn('⚠️  FORCE_NOTIFY mode enabled - all items will be treated as new\n');
   }
 
   try {
@@ -67,7 +72,19 @@ async function main() {
     // Step 4: Check cache and get diff
     console.log('[4/6] Checking cache for new items...');
     const previousState = loadState();
-    const { newItems, isFirstRun } = getNewItems(scoredItems, previousState);
+
+    let newItems, isFirstRun;
+
+    if (forceNotify) {
+      // Force mode: treat all items as new
+      newItems = scoredItems;
+      isFirstRun = false;
+      console.log('FORCE_NOTIFY: Treating all items as new');
+    } else {
+      const result = getNewItems(scoredItems, previousState);
+      newItems = result.newItems;
+      isFirstRun = result.isFirstRun;
+    }
 
     console.log(`Previous state: ${previousState.initialized ? 'initialized' : 'not initialized'}`);
     console.log(`First run: ${isFirstRun}`);
