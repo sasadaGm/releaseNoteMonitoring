@@ -7,6 +7,7 @@ const http = require('http');
 async function fetchUrl(url, options = {}) {
   const timeout = options.timeout || 10000;
   const maxSize = options.maxSize || 5 * 1024 * 1024; // 5MB default
+  const maxRedirects = options.maxRedirects || 5;
 
   return new Promise((resolve, reject) => {
     const urlObj = new URL(url);
@@ -18,9 +19,34 @@ async function fetchUrl(url, options = {}) {
         ...options.headers
       }
     }, (res) => {
-      // Handle redirects
-      if (res.statusCode === 301 || res.statusCode === 302) {
-        reject(new Error(`HTTP ${res.statusCode}: ${url}`));
+      // Handle redirects (301, 302, 307, 308)
+      if ([301, 302, 307, 308].includes(res.statusCode)) {
+        const redirectUrl = res.headers.location;
+
+        if (!redirectUrl) {
+          reject(new Error(`Redirect without location header: ${url}`));
+          return;
+        }
+
+        // Check redirect limit
+        const redirectCount = options.redirectCount || 0;
+        if (redirectCount >= maxRedirects) {
+          reject(new Error(`Too many redirects (${maxRedirects}): ${url}`));
+          return;
+        }
+
+        // Follow redirect
+        const newUrl = redirectUrl.startsWith('http')
+          ? redirectUrl
+          : new URL(redirectUrl, url).href;
+
+        console.log(`Following redirect: ${url} -> ${newUrl}`);
+
+        // Recursive call with incremented redirect count
+        fetchUrl(newUrl, {
+          ...options,
+          redirectCount: redirectCount + 1
+        }).then(resolve).catch(reject);
         return;
       }
 

@@ -12,14 +12,14 @@
     },
     {
       "id": "aws-aurora-mysql",
-      "name": "AWS Aurora MySQL Release Notes",
+      "name": "AWS Aurora MySQL Release Calendar",
       "category": "infrastructure",
       "type": "html",
-      "url": "https://docs.aws.amazon.com/AmazonRDS/latest/AuroraMySQLReleaseNotes/AuroraMySQL.Updates.html",
-      "selector": ".highlights",
+      "url": "https://docs.aws.amazon.com/en_us/AmazonRDS/latest/AuroraMySQLReleaseNotes/AuroraMySQL.release-calendars.html",
+      "selector": "body",
       "severityHint": "medium",
-      "enabled": false,
-      "note": "TODO: Fix redirect issue - may need different URL or approach"
+      "enabled": true,
+      "note": "en_us explicit URL to avoid redirect issues"
     },
     {
       "id": "memcached",
@@ -78,25 +78,34 @@
     },
     {
       "id": "polygon-massive",
-      "name": "Polygon.io (Massive)",
+      "name": "Massive (ex-Polygon.io) Blog",
       "category": "server",
       "type": "html",
-      "url": "https://polygon.io/blog",
-      "selector": ".blog-post",
+      "url": "https://massive.com/blog",
+      "selector": "h3 a",
       "severityHint": "medium",
-      "enabled": false,
-      "note": "TODO: Fix redirect issue - Monitor for API migration and service changes"
+      "enabled": true,
+      "note": "Polygon.io migrated to Massive.com - Monitor for API migration and service changes"
     },
     {
       "id": "kabucom-api",
-      "name": "auカブコム証券API",
+      "name": "kabuステーションAPI (kabusapi)",
       "category": "server",
-      "type": "html",
-      "url": "https://kabu.com/company/lp/service/api_info.html",
-      "selector": ".news",
+      "type": "github",
+      "url": "kabucom/kabusapi",
       "severityHint": "high",
+      "enabled": true,
+      "note": "Monitoring GitHub releases for stable updates"
+    },
+    {
+      "id": "kabucom-api-info",
+      "name": "kabuステーションAPI (Official Info)",
+      "category": "server",
+      "type": "reference",
+      "url": "https://kabu.com/item/kabustation_api/default.html",
+      "severityHint": "low",
       "enabled": false,
-      "note": "TODO: Fix URL (404 error) - Manual check recommended for detailed changes"
+      "note": "Reference link - manual check recommended for policy changes"
     },
     {
       "id": "jpx-api",
@@ -122,14 +131,14 @@
     },
     {
       "id": "openai-api",
-      "name": "OpenAI API",
+      "name": "OpenAI Newsroom (Company announcements)",
       "category": "server",
       "type": "html",
-      "url": "https://openai.com/blog/category/announcements",
-      "selector": ".post-preview",
+      "url": "https://openai.com/news/company-announcements/",
+      "selector": "a[href^=\"/news/\"]",
       "severityHint": "high",
-      "enabled": false,
-      "note": "TODO: Fix redirect issue (308) - try different URL or approach"
+      "enabled": true,
+      "note": "Newsroom URL for stable monitoring"
     },
     {
       "id": "xcode",
