@@ -1,0 +1,28 @@
+# Node modules
+node_modules/
+
+# Cache files
+monitor/cache/state.json
+monitor/cache/*.json
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment variables
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Claude Code
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db

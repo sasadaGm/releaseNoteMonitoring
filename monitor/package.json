@@ -1,0 +1,22 @@
+{
+  "name": "sdk-release-monitor",
+  "version": "1.0.0",
+  "description": "SDK and release monitoring system for Slack notifications",
+  "main": "run.js",
+  "scripts": {
+    "start": "node run.js",
+    "stats": "node run.js stats",
+    "test": "DRY_RUN=true node run.js"
+  },
+  "keywords": [
+    "monitoring",
+    "sdk",
+    "releases",
+    "slack"
+  ],
+  "author": "",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
