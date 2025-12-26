@@ -49,93 +49,169 @@ function formatMessage(newItems, stats) {
     low: ':white_circle:'
   };
 
+  const categoryEmoji = {
+    infrastructure: ':gear:',
+    server: ':desktop_computer:',
+    app: ':iphone:'
+  };
+
+  const categoryNames = {
+    infrastructure: 'インフラ系',
+    server: 'サーバー系',
+    app: 'アプリ系'
+  };
+
   // Build header
   let text = `*[Release Monitor] 今週の更新: ${stats.total}件*\n\n`;
 
-  // Summary stats
+  // Summary stats by category
+  text += '*カテゴリー別サマリ*\n';
+  Object.entries(stats.byCategory).forEach(([category, catStats]) => {
+    const emoji = categoryEmoji[category] || ':question:';
+    const name = categoryNames[category] || category;
+    text += `${emoji} ${name}: ${catStats.total}件 `;
+    text += `(Critical:${catStats.critical} High:${catStats.high} Medium:${catStats.medium} Low:${catStats.low})\n`;
+  });
+  text += '\n';
+
+  // Overall severity summary
   text += '*重要度別サマリ*\n';
-  text += `${severityEmoji.critical} Critical: ${stats.critical}件\n`;
-  text += `${severityEmoji.high} High: ${stats.high}件\n`;
-  text += `${severityEmoji.medium} Medium: ${stats.medium}件\n`;
+  text += `${severityEmoji.critical} Critical: ${stats.critical}件 `;
+  text += `${severityEmoji.high} High: ${stats.high}件 `;
+  text += `${severityEmoji.medium} Medium: ${stats.medium}件 `;
   text += `${severityEmoji.low} Low: ${stats.low}件\n`;
   text += '\n';
 
-  // High and Critical items - show details
+  // High and Critical items - show details by category
   const criticalAndHigh = newItems.filter(
     item => item.severity === 'critical' || item.severity === 'high'
   );
 
   if (criticalAndHigh.length > 0) {
-    text += `*重要な更新 (Critical/High)*\n`;
+    text += `*重要な更新 (Critical/High): ${criticalAndHigh.length}件*\n\n`;
 
-    criticalAndHigh.forEach(item => {
-      const emoji = severityEmoji[item.severity];
-      const reasons = item.severityReasons.length > 0
-        ? ` (${item.severityReasons.join(', ')})`
-        : '';
+    // Group by category
+    const categories = ['infrastructure', 'server', 'app'];
 
-      text += `${emoji} *[${item.severity.toUpperCase()}] ${item.sourceName}*\n`;
-      text += `  ${item.title}\n`;
+    categories.forEach(category => {
+      const categoryItems = criticalAndHigh.filter(item => item.category === category);
 
-      if (reasons) {
-        text += `  _判定理由: ${reasons}_\n`;
+      if (categoryItems.length > 0) {
+        const emoji = categoryEmoji[category] || ':question:';
+        const name = categoryNames[category] || category;
+        text += `${emoji} *${name}* (${categoryItems.length}件)\n`;
+
+        categoryItems.forEach(item => {
+          const severityIcon = severityEmoji[item.severity];
+          const reasons = item.severityReasons.length > 0
+            ? ` _[${item.severityReasons.join(', ')}]_`
+            : '';
+
+          text += `  ${severityIcon} ${item.sourceName}: ${item.title}${reasons}\n`;
+          text += `     <${item.url}|詳細を見る>\n`;
+        });
+
+        text += '\n';
       }
-
-      text += `  <${item.url}|詳細を見る>\n`;
-      text += '\n';
     });
   }
 
-  // Medium items - compact view
+  // Medium items - compact view by category
   const mediumItems = newItems.filter(item => item.severity === 'medium');
 
   if (mediumItems.length > 0) {
-    text += `*Medium優先度の更新 (${mediumItems.length}件)*\n`;
+    text += `*Medium優先度の更新: ${mediumItems.length}件*\n\n`;
 
-    mediumItems.slice(0, 5).forEach(item => {
-      text += `• ${item.sourceName}: ${item.title} <${item.url}|→>\n`;
+    const categories = ['infrastructure', 'server', 'app'];
+
+    categories.forEach(category => {
+      const categoryItems = mediumItems.filter(item => item.category === category);
+
+      if (categoryItems.length > 0) {
+        const emoji = categoryEmoji[category] || ':question:';
+        const name = categoryNames[category] || category;
+        text += `${emoji} *${name}* (${categoryItems.length}件)\n`;
+
+        categoryItems.slice(0, 3).forEach(item => {
+          text += `  • ${item.sourceName}: ${item.title.substring(0, 60)}...\n`;
+        });
+
+        if (categoryItems.length > 3) {
+          text += `  _...他${categoryItems.length - 3}件_\n`;
+        }
+        text += '\n';
+      }
     });
-
-    if (mediumItems.length > 5) {
-      text += `_...他${mediumItems.length - 5}件_\n`;
-    }
-    text += '\n';
   }
 
-  // Low items - summary only
+  // Low items - summary only by category
   const lowItems = newItems.filter(item => item.severity === 'low');
 
   if (lowItems.length > 0) {
-    text += `*その他の更新 (Low: ${lowItems.length}件)*\n`;
-    text += '_詳細は監視ログを確認してください_\n';
+    text += `*その他の更新 (Low): ${lowItems.length}件*\n`;
+
+    const categories = ['infrastructure', 'server', 'app'];
+    const categoryCounts = {};
+
+    categories.forEach(category => {
+      const count = lowItems.filter(item => item.category === category).length;
+      if (count > 0) {
+        const emoji = categoryEmoji[category] || ':question:';
+        const name = categoryNames[category] || category;
+        categoryCounts[category] = count;
+        text += `${emoji} ${name}: ${count}件  `;
+      }
+    });
+
+    text += '\n_詳細は監視ログを確認してください_\n';
     text += '\n';
   }
 
-  // Next actions
+  // Next actions - category-specific
   text += '*推奨アクション*\n';
 
   if (stats.critical > 0) {
-    text += '• Critical項目を優先的に確認し、即座に対応を検討してください\n';
+    text += '• :rotating_light: *Critical項目*: 即座に確認し対応を開始してください\n';
   }
 
   if (stats.high > 0) {
-    text += '• High項目について、影響範囲と対応期限を調査してください\n';
+    text += '• :warning: *High項目*: 影響範囲と対応期限を調査してください\n';
   }
 
+  // Category-specific actions
+  const actionsByCategory = {
+    infrastructure: [],
+    server: [],
+    app: []
+  };
+
   if (criticalAndHigh.length > 0) {
-    // Suggest specific actions based on categories
     const categories = [...new Set(criticalAndHigh.map(i => i.category))];
 
     if (categories.includes('infrastructure')) {
-      text += '• インフラ関連: サーバー環境への影響を確認\n';
+      actionsByCategory.infrastructure.push('サーバー環境・ミドルウェアへの影響確認');
+      actionsByCategory.infrastructure.push('セキュリティパッチの適用検討');
     }
     if (categories.includes('server')) {
-      text += '• サーバー関連: API/SDK依存関係を確認し、必要に応じてアップデート\n';
+      actionsByCategory.server.push('API/SDK依存関係の確認');
+      actionsByCategory.server.push('互換性テストの実施');
+      actionsByCategory.server.push('必要に応じてライブラリのアップデート');
     }
     if (categories.includes('app')) {
-      text += '• アプリ関連: iOS/Androidアプリへの影響を調査し、ビルド検証を実施\n';
+      actionsByCategory.app.push('iOS/Androidアプリへの影響調査');
+      actionsByCategory.app.push('ビルド検証・テスト実施');
+      actionsByCategory.app.push('ストア申請要件の確認');
     }
   }
+
+  // Output category-specific actions
+  Object.entries(actionsByCategory).forEach(([category, actions]) => {
+    if (actions.length > 0) {
+      const emoji = categoryEmoji[category] || ':question:';
+      const name = categoryNames[category] || category;
+      text += `• ${emoji} *${name}*: ${actions.join('、')}\n`;
+    }
+  });
 
   if (stats.total === 0) {
     text = '*[Release Monitor] 今週の更新: なし*\n\n';
