@@ -1,0 +1,251 @@
+{
+  "sources": [
+    {
+      "id": "amazon-linux",
+      "name": "Amazon Linux Release Notes",
+      "category": "infrastructure",
+      "type": "rss",
+      "url": "https://aws.amazon.com/about-aws/whats-new/recent/feed/",
+      "filter": "Amazon Linux",
+      "severityHint": "medium",
+      "enabled": true
+    },
+    {
+      "id": "aws-aurora-mysql",
+      "name": "AWS Aurora MySQL Release Notes",
+      "category": "infrastructure",
+      "type": "html",
+      "url": "https://docs.aws.amazon.com/AmazonRDS/latest/AuroraMySQLReleaseNotes/AuroraMySQL.Updates.html",
+      "selector": ".highlights",
+      "severityHint": "medium",
+      "enabled": false,
+      "note": "TODO: Fix redirect issue - may need different URL or approach"
+    },
+    {
+      "id": "memcached",
+      "name": "Memcached",
+      "category": "infrastructure",
+      "type": "github",
+      "url": "memcached/memcached",
+      "severityHint": "medium",
+      "enabled": true
+    },
+    {
+      "id": "openssl",
+      "name": "OpenSSL",
+      "category": "infrastructure",
+      "type": "github",
+      "url": "openssl/openssl",
+      "severityHint": "high",
+      "enabled": true
+    },
+    {
+      "id": "laravel",
+      "name": "Laravel Framework",
+      "category": "server",
+      "type": "github",
+      "url": "laravel/framework",
+      "severityHint": "medium",
+      "enabled": true
+    },
+    {
+      "id": "fuelphp",
+      "name": "FuelPHP",
+      "category": "server",
+      "type": "github",
+      "url": "fuel/fuel",
+      "severityHint": "medium",
+      "enabled": true
+    },
+    {
+      "id": "php-versions",
+      "name": "PHP Supported Versions",
+      "category": "server",
+      "type": "html",
+      "url": "https://www.php.net/supported-versions.php",
+      "selector": ".release-table",
+      "severityHint": "high",
+      "enabled": true
+    },
+    {
+      "id": "sendgrid-status",
+      "name": "SendGrid Status",
+      "category": "server",
+      "type": "rss",
+      "url": "https://status.sendgrid.com/history.rss",
+      "severityHint": "high",
+      "enabled": true
+    },
+    {
+      "id": "polygon-massive",
+      "name": "Polygon.io (Massive)",
+      "category": "server",
+      "type": "html",
+      "url": "https://polygon.io/blog",
+      "selector": ".blog-post",
+      "severityHint": "medium",
+      "enabled": false,
+      "note": "TODO: Fix redirect issue - Monitor for API migration and service changes"
+    },
+    {
+      "id": "kabucom-api",
+      "name": "auカブコム証券API",
+      "category": "server",
+      "type": "html",
+      "url": "https://kabu.com/company/lp/service/api_info.html",
+      "selector": ".news",
+      "severityHint": "high",
+      "enabled": false,
+      "note": "TODO: Fix URL (404 error) - Manual check recommended for detailed changes"
+    },
+    {
+      "id": "jpx-api",
+      "name": "東証API",
+      "category": "server",
+      "type": "html",
+      "url": "https://www.jpx.co.jp/markets/paid-info-equities/nlsgeu000003pd2p-att/nlsgeu000003pd39.pdf",
+      "selector": "pdf",
+      "severityHint": "high",
+      "enabled": false,
+      "note": "TODO: Email monitoring required for PDF attachments"
+    },
+    {
+      "id": "edinet-api",
+      "name": "EDINET API",
+      "category": "server",
+      "type": "html",
+      "url": "https://disclosure2.edinet-fsa.go.jp/",
+      "selector": ".info",
+      "severityHint": "medium",
+      "enabled": false,
+      "note": "TODO: Email monitoring required"
+    },
+    {
+      "id": "openai-api",
+      "name": "OpenAI API",
+      "category": "server",
+      "type": "html",
+      "url": "https://openai.com/blog/category/announcements",
+      "selector": ".post-preview",
+      "severityHint": "high",
+      "enabled": false,
+      "note": "TODO: Fix redirect issue (308) - try different URL or approach"
+    },
+    {
+      "id": "xcode",
+      "name": "Xcode Releases",
+      "category": "app",
+      "type": "html",
+      "url": "https://developer.apple.com/news/releases/",
+      "filter": "Xcode",
+      "severityHint": "high",
+      "enabled": true
+    },
+    {
+      "id": "ios-release",
+      "name": "iOS Releases",
+      "category": "app",
+      "type": "html",
+      "url": "https://developer.apple.com/news/releases/",
+      "filter": "iOS",
+      "severityHint": "medium",
+      "enabled": true
+    },
+    {
+      "id": "adjust-ios-sdk",
+      "name": "Adjust iOS SDK",
+      "category": "app",
+      "type": "github",
+      "url": "adjust/ios_sdk",
+      "severityHint": "medium",
+      "enabled": true
+    },
+    {
+      "id": "firebase-ios",
+      "name": "Firebase iOS SDK",
+      "category": "app",
+      "type": "html",
+      "url": "https://firebase.google.com/support/release-notes/ios",
+      "selector": ".devsite-article-body",
+      "severityHint": "medium",
+      "enabled": true
+    },
+    {
+      "id": "android-studio",
+      "name": "Android Studio",
+      "category": "app",
+      "type": "html",
+      "url": "https://developer.android.com/studio/releases",
+      "selector": ".devsite-article-body",
+      "severityHint": "medium",
+      "enabled": true
+    },
+    {
+      "id": "firebase-android",
+      "name": "Firebase Android SDK",
+      "category": "app",
+      "type": "html",
+      "url": "https://firebase.google.com/support/release-notes/android",
+      "selector": ".devsite-article-body",
+      "severityHint": "medium",
+      "enabled": true
+    },
+    {
+      "id": "adjust-android-sdk",
+      "name": "Adjust Android SDK",
+      "category": "app",
+      "type": "github",
+      "url": "adjust/android_sdk",
+      "severityHint": "medium",
+      "enabled": true
+    },
+    {
+      "id": "android-youtube-player",
+      "name": "Android YouTube Player",
+      "category": "app",
+      "type": "github",
+      "url": "PierfrancescoSoffritti/android-youtube-player",
+      "severityHint": "low",
+      "enabled": true
+    },
+    {
+      "id": "bottom-navigator",
+      "name": "BottomNavigator",
+      "category": "app",
+      "type": "github",
+      "url": "PandoraMedia/BottomNavigator",
+      "severityHint": "low",
+      "enabled": true
+    },
+    {
+      "id": "superchart",
+      "name": "SuperChart",
+      "category": "app",
+      "type": "github",
+      "url": "GreenMonsterInc/superchart_droid",
+      "severityHint": "low",
+      "enabled": false,
+      "note": "TODO: Private repository - may need access token"
+    },
+    {
+      "id": "wwdc-zenn",
+      "name": "WWDC情報 (Zenn)",
+      "category": "app",
+      "type": "reference",
+      "url": "https://zenn.dev/search?q=WWDC",
+      "severityHint": "low",
+      "enabled": false,
+      "note": "TODO: Manual check - search results monitoring is complex"
+    },
+    {
+      "id": "wwdc-qiita",
+      "name": "WWDC情報 (Qiita)",
+      "category": "app",
+      "type": "reference",
+      "url": "https://qiita.com/search?q=user%3AYokohamaHori%E3%80%80WWDC&sort=created",
+      "severityHint": "low",
+      "enabled": false,
+      "note": "TODO: Manual check - search results monitoring is complex"
+    }
+  ]
+}
