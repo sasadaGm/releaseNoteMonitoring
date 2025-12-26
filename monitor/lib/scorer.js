@@ -11,12 +11,13 @@ const SEVERITY_LEVELS = {
 };
 
 // Keywords and their severity weights
+// Use word boundaries to avoid false positives (e.g., "rce" in "resource")
 const CRITICAL_KEYWORDS = [
-  'security',
+  'security vulnerability',
+  'security issue',
   'vulnerability',
   'cve-',
   'remote code execution',
-  'rce',
   'certificate expir',
   'service disruption',
   'outage',
@@ -79,6 +80,24 @@ const LOW_KEYWORDS = [
 ];
 
 /**
+ * Match keyword with word boundary awareness
+ * Avoids false positives like "rce" matching "resource"
+ */
+function matchKeyword(text, keyword) {
+  const lowerKeyword = keyword.toLowerCase();
+
+  // Special case: keywords with hyphens or special chars (like "cve-")
+  if (/[-:]/.test(lowerKeyword)) {
+    return text.includes(lowerKeyword);
+  }
+
+  // Use word boundary regex to avoid partial matches
+  // \b ensures we match whole words only
+  const regex = new RegExp(`\\b${lowerKeyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+  return regex.test(text);
+}
+
+/**
  * Calculate severity score for an item
  */
 function scoreItem(item, source) {
@@ -92,28 +111,28 @@ function scoreItem(item, source) {
 
   // Check critical keywords
   CRITICAL_KEYWORDS.forEach(keyword => {
-    if (text.includes(keyword.toLowerCase())) {
+    if (matchKeyword(text, keyword)) {
       matches.critical.push(keyword);
     }
   });
 
   // Check high keywords
   HIGH_KEYWORDS.forEach(keyword => {
-    if (text.includes(keyword.toLowerCase())) {
+    if (matchKeyword(text, keyword)) {
       matches.high.push(keyword);
     }
   });
 
   // Check medium keywords
   MEDIUM_KEYWORDS.forEach(keyword => {
-    if (text.includes(keyword.toLowerCase())) {
+    if (matchKeyword(text, keyword)) {
       matches.medium.push(keyword);
     }
   });
 
   // Check low keywords
   LOW_KEYWORDS.forEach(keyword => {
-    if (text.includes(keyword.toLowerCase())) {
+    if (matchKeyword(text, keyword)) {
       matches.low.push(keyword);
     }
   });
