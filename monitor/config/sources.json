@@ -156,8 +156,40 @@
       "url": "https://openai.com/news/company-announcements/",
       "selector": "a[href^=\"/news/\"]",
       "severityHint": "high",
+      "enabled": false,
+      "note": "Disabled - GitHub Actions gets 403 (bot detection). Replaced with official feeds."
+    },
+    {
+      "id": "openai-api-changelog",
+      "name": "OpenAI API Changelog",
+      "category": "server",
+      "type": "html",
+      "url": "https://platform.openai.com/docs/changelog",
+      "selector": "h2, h3",
+      "severityHint": "high",
       "enabled": true,
-      "note": "Newsroom URL for stable monitoring"
+      "note": "Official API changelog - covers breaking changes, deprecations, pricing"
+    },
+    {
+      "id": "openai-dev-changelog",
+      "name": "OpenAI Developer Changelog",
+      "category": "server",
+      "type": "html",
+      "url": "https://developers.openai.com/changelog",
+      "selector": "a",
+      "severityHint": "medium",
+      "enabled": true,
+      "note": "Developer tools and SDK updates"
+    },
+    {
+      "id": "openai-status",
+      "name": "OpenAI Status (RSS)",
+      "category": "server",
+      "type": "rss",
+      "url": "https://status.openai.com/feed.rss",
+      "severityHint": "high",
+      "enabled": true,
+      "note": "Service incidents and outages monitoring"
     },
     {
       "id": "xcode",
