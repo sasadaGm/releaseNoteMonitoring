@@ -131,11 +131,17 @@ async function main() {
     console.log(`  Low: ${stats.low}`);
 
     // Send to Slack
+    const monitoringPeriod = {
+      isFirstRun: false, // Always false here since first run exits early
+      lastRun: previousState.lastRun,
+      currentRun: newState.lastRun
+    };
+
     if (dryRun) {
       console.log('\nDRY RUN: Would send notification with:');
       console.log(JSON.stringify(stats, null, 2));
     } else if (webhookUrl) {
-      await sendNotification(webhookUrl, newItems, stats);
+      await sendNotification(webhookUrl, newItems, stats, monitoringPeriod);
       console.log('\n✓ Notification sent to Slack');
     }
 

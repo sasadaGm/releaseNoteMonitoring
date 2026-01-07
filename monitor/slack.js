@@ -2,6 +2,21 @@ const https = require('https');
 const { URL } = require('url');
 
 /**
+ * Format date in Japanese style
+ * @param {Date} date - Date object
+ * @returns {string} - Formatted date like "2026年1月9日 10:00"
+ */
+function formatJapaneseDate(date) {
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1; // 0-indexed
+  const day = date.getDate();
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+
+  return `${year}年${month}月${day}日 ${hours}:${minutes}`;
+}
+
+/**
  * Post message to Slack webhook
  */
 async function postToSlack(webhookUrl, message) {
@@ -41,7 +56,7 @@ async function postToSlack(webhookUrl, message) {
 /**
  * Format items for Slack message
  */
-function formatMessage(newItems, stats) {
+function formatMessage(newItems, stats, monitoringPeriod = {}) {
   const severityEmoji = {
     critical: ':red_circle:',
     high: ':large_orange_diamond:',
@@ -61,8 +76,28 @@ function formatMessage(newItems, stats) {
     app: 'アプリ系'
   };
 
-  // Build header
-  let text = `*[Release Monitor] 今週の更新: ${stats.total}件*\n\n`;
+  // Build header with monitoring period
+  let text = '';
+
+  if (monitoringPeriod.isFirstRun) {
+    // First run
+    const currentDate = new Date(monitoringPeriod.currentRun);
+    const formattedDate = formatJapaneseDate(currentDate);
+    text += `*[Release Monitor] 初回実行*\n`;
+    text += `📅 実行日時: ${formattedDate}\n`;
+    text += `※過去データがないため、現時点の情報のみを表示しています\n\n`;
+  } else if (monitoringPeriod.lastRun && monitoringPeriod.currentRun) {
+    // Normal run with period
+    const lastDate = new Date(monitoringPeriod.lastRun);
+    const currentDate = new Date(monitoringPeriod.currentRun);
+    const formattedLast = formatJapaneseDate(lastDate);
+    const formattedCurrent = formatJapaneseDate(currentDate);
+    text += `*[Release Monitor] 今週の更新: ${stats.total}件*\n`;
+    text += `📅 監視期間: ${formattedLast} 〜 ${formattedCurrent}\n\n`;
+  } else {
+    // Fallback (no period info)
+    text += `*[Release Monitor] 今週の更新: ${stats.total}件*\n\n`;
+  }
 
   // Summary stats by category
   text += '*カテゴリー別サマリ*\n';
@@ -224,14 +259,14 @@ function formatMessage(newItems, stats) {
 /**
  * Build and send Slack notification
  */
-async function sendNotification(webhookUrl, newItems, stats) {
+async function sendNotification(webhookUrl, newItems, stats, monitoringPeriod = {}) {
   if (!webhookUrl) {
     throw new Error('SLACK_WEBHOOK_URL is not configured');
   }
 
   console.log(`Preparing Slack notification for ${stats.total} items...`);
 
-  const text = formatMessage(newItems, stats);
+  const text = formatMessage(newItems, stats, monitoringPeriod);
 
   const message = {
     text,
