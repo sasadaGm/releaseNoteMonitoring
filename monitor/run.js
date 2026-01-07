@@ -112,16 +112,12 @@ async function main() {
       return;
     }
 
-    if (newItems.length === 0) {
-      console.log('No new items to report - skipping notification');
-      console.log('\n' + '='.repeat(60));
-      console.log('Monitor complete - no updates found');
-      console.log('='.repeat(60));
-      return;
-    }
-
-    // Generate stats for new items
+    // Generate stats for new items (even if 0)
     const stats = getSummaryStats(newItems);
+
+    if (newItems.length === 0) {
+      console.log('No new items to report - but will send notification');
+    }
 
     console.log('\nNew items summary:');
     console.log(`  Total: ${stats.total}`);

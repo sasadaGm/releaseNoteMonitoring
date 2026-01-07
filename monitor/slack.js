@@ -99,6 +99,13 @@ function formatMessage(newItems, stats, monitoringPeriod = {}) {
     text += `*[Release Monitor] 今週の更新: ${stats.total}件*\n\n`;
   }
 
+  // Check if there are no updates
+  if (stats.total === 0) {
+    text += '今週は新しい更新はありませんでした。\n';
+    text += '監視は正常に実行されています。\n';
+    return text;
+  }
+
   // Summary stats by category
   text += '*カテゴリー別サマリ*\n';
   Object.entries(stats.byCategory).forEach(([category, catStats]) => {
@@ -247,11 +254,6 @@ function formatMessage(newItems, stats, monitoringPeriod = {}) {
       text += `• ${emoji} *${name}*: ${actions.join('、')}\n`;
     }
   });
-
-  if (stats.total === 0) {
-    text = '*[Release Monitor] 今週の更新: なし*\n\n';
-    text += '新しい重要な更新は検出されませんでした。';
-  }
 
   return text;
 }
