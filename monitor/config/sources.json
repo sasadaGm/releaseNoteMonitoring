@@ -192,6 +192,17 @@
       "note": "Service incidents and outages monitoring"
     },
     {
+      "id": "google-cloud-release-notes",
+      "name": "Google Cloud Release Notes",
+      "category": "server",
+      "type": "html",
+      "url": "https://docs.cloud.google.com/release-notes",
+      "selector": "a[href^=\"/release-notes/\"]",
+      "severityHint": "medium",
+      "enabled": true,
+      "note": "GCP service updates and breaking changes (heading-based extraction)"
+    },
+    {
       "id": "xcode",
       "name": "Xcode Releases",
       "category": "app",
