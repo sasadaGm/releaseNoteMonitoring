@@ -97,16 +97,6 @@
       "note": "Python SDK for Massive (ex-Polygon.io) API"
     },
     {
-      "id": "massive-sdk-go",
-      "name": "Massive (Polygon) Go SDK",
-      "category": "server",
-      "type": "github",
-      "url": "polygon-io/client-go",
-      "severityHint": "medium",
-      "enabled": true,
-      "note": "Go SDK for Massive (ex-Polygon.io) API"
-    },
-    {
       "id": "kabucom-api",
       "name": "kabuステーションAPI (kabusapi)",
       "category": "server",
